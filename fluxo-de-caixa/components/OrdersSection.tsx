@@ -181,7 +181,7 @@ export function OrdersSection() {
       'cancelled': { variant: 'destructive' as const, label: 'Cancelado' },
     };
     const config = variants[status];
-    return <Badge variant={config.variant} className={config.className}>{config.label}</Badge>;
+    return <Badge variant={config.variant} className={(config as { className?: string }).className ?? ""}>{config.label}</Badge>;
   };
 
   const handleEdit = (order: Order) => {
