@@ -1,8 +1,16 @@
 [
-    {
-        "nome": "Troca de sola",
-        "descricao": "Troca de sola de borracha ou couro",
-        "preco": 35.00,
-        "duracao": 60
-    }
+  {
+    "id": "asdfgh",
+    "name": "Troca de sola",
+    "description": "Troca de sola de borracha ou couro",
+    "price": 35,
+    "duration": 60
+  },
+  {
+    "name": "Troca de Salto",
+    "description": "Substituição de salto alto ou médio",
+    "price": 35,
+    "duration": 45,
+    "id": "1763153243013"
+  }
 ]

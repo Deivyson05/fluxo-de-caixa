@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -19,16 +19,33 @@ interface Service {
 }
 
 export function ServicesSection() {
-  const [services, setServices] = useState<Service[]>([
-    { id: '1', name: 'Troca de Sola', description: 'Troca de sola de borracha ou couro', price: 45.00, duration: 60 },
-    { id: '2', name: 'Troca de Salto', description: 'Substituição de salto alto ou médio', price: 35.00, duration: 45 },
-    { id: '3', name: 'Costura de Rasgos', description: 'Costura e reparo de rasgos em couro', price: 30.00, duration: 30 },
-    { id: '4', name: 'Alongamento de Calçados', description: 'Alongamento para calçados apertados', price: 25.00, duration: 120 },
-    { id: '5', name: 'Troca de Zíper', description: 'Substituição de zíper em botas', price: 40.00, duration: 50 },
-    { id: '6', name: 'Limpeza e Hidratação', description: 'Limpeza profunda e hidratação de couro', price: 50.00, duration: 90 },
-    { id: '7', name: 'Palmilha Ortopédica', description: 'Confecção de palmilha personalizada', price: 80.00, duration: 120 },
-    { id: '8', name: 'Tingimento de Couro', description: 'Mudança de cor em calçados de couro', price: 60.00, duration: 180 },
-  ]);
+  const [services, setServices] = useState<Service[]>([]);
+
+  useEffect(() => {
+    async function fetchServicos() {
+      try {
+        const res = await fetch("api/servicos");
+        const data = await res.json();
+        setServices(data);
+        console.log("servicos: " + data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchServicos();
+  }, []);
+
+  async function atualizarServicos(novoArray: Client[]) {
+    const res = await fetch("/api/servicos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(novoArray),
+    });
+
+    const data = await res.json();
+    console.log("Resposta da API:", data);
+  }
+
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
@@ -54,8 +71,10 @@ export function ServicesSection() {
     };
 
     if (editingService) {
+      atualizarServicos(services.map(s => s.id === editingService.id ? { ...serviceData, id: editingService.id } : s));
       setServices(services.map(s => s.id === editingService.id ? { ...serviceData, id: editingService.id } : s));
     } else {
+      atualizarServicos([...services, { ...serviceData, id: Date.now().toString() }]);
       setServices([...services, { ...serviceData, id: Date.now().toString() }]);
     }
     resetForm();
@@ -79,6 +98,7 @@ export function ServicesSection() {
   };
 
   const handleDelete = (id: string) => {
+    atualizarServicos(services.filter(s => s.id !== id));
     setServices(services.filter(s => s.id !== id));
   };
 
