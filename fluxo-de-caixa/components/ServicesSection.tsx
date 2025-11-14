@@ -35,7 +35,7 @@ export function ServicesSection() {
     fetchServicos();
   }, []);
 
-  async function atualizarServicos(novoArray: Client[]) {
+  async function atualizarServicos(novoArray: Service[]) {
     const res = await fetch("/api/servicos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
