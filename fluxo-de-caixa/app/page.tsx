@@ -14,10 +14,10 @@ export default function Home() {
       <header className="bg-white border-b border-slate-200 shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center gap-3">
-            <ShoppingBag className="w-8 h-8 text-blue-600" />
+            <img src="/icone.png" alt="icon" className='h-10' />
             <div>
-              <h1 className="text-slate-900">Sistema de Sapataria</h1>
-              <p className="text-slate-600 text-sm">Gerenciamento completo da sua sapataria</p>
+              <h1 className="text-slate-900">AG Sapataria</h1>
+              <p className="text-slate-600 text-sm">Gerenciamento de pedidos</p>
             </div>
           </div>
         </div>
@@ -26,15 +26,15 @@ export default function Home() {
       <main className="container mx-auto px-6 py-8">
         <Tabs defaultValue="orders" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="orders" className="flex items-center gap-2">
+            <TabsTrigger value="orders" className="flex items-center gap-2 cursor-pointer">
               <FileText className="w-4 h-4" />
               Ordens de Serviço
             </TabsTrigger>
-            <TabsTrigger value="clients" className="flex items-center gap-2">
+            <TabsTrigger value="clients" className="flex items-center gap-2 cursor-pointer">
               <Users className="w-4 h-4" />
               Clientes
             </TabsTrigger>
-            <TabsTrigger value="services" className="flex items-center gap-2">
+            <TabsTrigger value="services" className="flex items-center gap-2 cursor-pointer">
               <Wrench className="w-4 h-4" />
               Serviços
             </TabsTrigger>

@@ -8,8 +8,9 @@ import { Label } from './ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
+import { getData, setData, fetchData } from '@/lib/utils';
 
-interface Client {
+export interface Client {
   id: string;
   name: string;
   email: string;
@@ -22,28 +23,11 @@ export function ClientsSection() {
   const [clients, setClients] = useState<Client[]>([]);
 
   useEffect(() => {
-    async function fetchClientes() {
-      try {
-        const res = await fetch("api/clientes");
-        const data = await res.json();
-        setClients(data);
-        console.log("clientes: " + data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchClientes();
+    fetchData('clientes', setClients);
   }, [])
 
   async function atualizarClientes(novoArray: Client[]) {
-    const res = await fetch("/api/clientes", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(novoArray),
-    });
-
-    const data = await res.json();
-    console.log("Resposta da API:", data);
+    setData('clientes', novoArray);
   }
 
 
@@ -103,7 +87,7 @@ export function ClientsSection() {
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => { setEditingClient(null); setFormData({ name: '', email: '', phone: '', address: '' }); }}>
+              <Button className='cursor-pointer' onClick={() => { setEditingClient(null); setFormData({ name: '', email: '', phone: '', address: '' }); }}>
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Cliente
               </Button>
