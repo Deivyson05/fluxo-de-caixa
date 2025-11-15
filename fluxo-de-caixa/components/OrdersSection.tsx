@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -11,6 +11,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Plus, Search, Eye, Trash2, CheckCircle2, Printer, Edit } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { ThermalPrint } from './ThermalPrint';
+import { fetchData, setData, getData } from '@/lib/utils';
+import { Client } from './ClientsSection';
+import { Service } from './ServicesSection';
+import { set } from 'react-hook-form';
 
 interface OrderItem {
   id: string;
@@ -30,45 +34,33 @@ interface Order {
   total: number;
 }
 
-const mockClients = ['João Silva', 'Maria Santos', 'Pedro Oliveira'];
-const mockServices = [
-  { id: '1', name: 'Troca de Sola', price: 45.00 },
-  { id: '2', name: 'Troca de Salto', price: 35.00 },
-  { id: '3', name: 'Costura de Rasgos', price: 30.00 },
-  { id: '4', name: 'Alongamento de Calçados', price: 25.00 },
-  { id: '5', name: 'Troca de Zíper', price: 40.00 },
-  { id: '6', name: 'Limpeza e Hidratação', price: 50.00 },
-  { id: '7', name: 'Palmilha Ortopédica', price: 80.00 },
-  { id: '8', name: 'Tingimento de Couro', price: 60.00 },
-];
+
+
+
 
 export function OrdersSection() {
-  const [orders, setOrders] = useState<Order[]>([
-    {
-      id: '1',
-      clientName: 'João Silva',
-      date: '2025-11-12',
-      deliveryDate: '2025-11-15',
-      status: 'in-progress',
-      items: [
-        { id: '1', type: 'service', name: 'Troca de Sola', price: 45.00, quantity: 2 },
-        { id: '2', type: 'service', name: 'Troca de Salto', price: 35.00, quantity: 1 },
-      ],
-      total: 125.00,
-    },
-    {
-      id: '2',
-      clientName: 'Maria Santos',
-      date: '2025-11-12',
-      deliveryDate: '2025-11-15',
-      status: 'completed',
-      items: [
-        { id: '6', type: 'service', name: 'Limpeza e Hidratação', price: 50.00, quantity: 1 },
-        { id: '7', type: 'service', name: 'Palmilha Ortopédica', price: 80.00, quantity: 1 },
-      ],
-      total: 130.00,
-    },
-  ]);
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  const [mockClients, setMockClients] = useState<String[]>([]);
+  const [mockServices, setMockServices] = useState<OrderItem[]>([]);
+
+  useEffect(() => {
+    let clients: Client[] = getData('clientes');
+    let services: Service[] = getData('servicos');
+
+    setMockClients(clients.map((c: Client) => c.name));
+    //[{id, name, price}]
+    let s: OrderItem[] = services.map((s: Service) => ({ id: s.id, name: s.name, price: s.price, quantity: 1, type: 'service' }));
+    setMockServices(s);
+
+
+    fetchData('ordens', setOrders);
+  }, []);
+
+  async function atualizarOrdens(novoArray: Order[]) {
+    setData('ordens', novoArray);
+  }
+
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [viewingOrder, setViewingOrder] = useState<Order | null>(null);
@@ -122,7 +114,7 @@ export function OrdersSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (editingOrder) {
       // Atualizar ordem existente
       const updatedOrder: Order = {
@@ -135,6 +127,7 @@ export function OrdersSection() {
         total: calculateTotal(),
       };
       setOrders(orders.map(order => order.id === editingOrder.id ? updatedOrder : order));
+      atualizarOrdens(orders.map(order => order.id === editingOrder.id ? updatedOrder : order));
     } else {
       // Criar nova ordem
       const newOrder: Order = {
@@ -147,6 +140,7 @@ export function OrdersSection() {
         total: calculateTotal(),
       };
       setOrders([newOrder, ...orders]);
+      atualizarOrdens([newOrder, ...orders]);
     }
     resetForm();
   };
@@ -207,7 +201,7 @@ export function OrdersSection() {
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button onClick={() => { setEditingOrder(null); setOrderItems([]); setFormData({ clientName: '', date: new Date().toISOString().split('T')[0], deliveryDate: new Date().toISOString().split('T')[0], status: 'pending' }); }}>
+                <Button className='cursor-pointer'  onClick={() => { setEditingOrder(null); setOrderItems([]); setFormData({ clientName: '', date: new Date().toISOString().split('T')[0], deliveryDate: new Date().toISOString().split('T')[0], status: 'pending' }); }}>
                   <Plus className="w-4 h-4 mr-2" />
                   Nova Ordem
                 </Button>
@@ -232,11 +226,15 @@ export function OrdersSection() {
                           <SelectValue placeholder="Selecione um cliente" />
                         </SelectTrigger>
                         <SelectContent>
-                          {mockClients.map((client) => (
-                            <SelectItem key={client} value={client}>
-                              {client}
-                            </SelectItem>
-                          ))}
+                          {
+                            mockClients.length > 0 && mockClients.map((client) => (
+                              mockClients.map((client) => (
+                                <SelectItem key={`${client}`} value={`${client}`}>
+                                  {client}
+                                </SelectItem>
+                              ))
+                            ))
+                          }
                         </SelectContent>
                       </Select>
                     </div>

@@ -181,9 +181,9 @@ export function ThermalPrint({ order, onClose }: ThermalPrintProps) {
 
         <div ref={printRef} className="bg-white p-4 border-2 border-dashed border-slate-300 rounded-lg" style={{ fontFamily: 'Courier New, monospace', fontSize: '12px', width: '80mm', margin: '0 auto' }}>
           <div className="header" style={{ textAlign: 'center', marginBottom: '10px' }}>
-            <h1 className="bold" style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>SAPATARIA</h1>
-            <p style={{ margin: '2px 0', fontSize: '11px' }}>Rua Exemplo, 123 - Centro</p>
-            <p style={{ margin: '2px 0', fontSize: '11px' }}>Tel: (11) 1234-5678</p>
+            <h1 className="bold" style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>AG SAPATARIA</h1>
+            <p style={{ margin: '2px 0', fontSize: '11px' }}>R. Padre Lemos, S/N - Casa Amarela, Recife - PE, 52070-200 - Centro comercial de casa amarela</p>
+            <p style={{ margin: '2px 0', fontSize: '11px' }}>Tel: (81) 98788-6500</p>
           </div>
 
           <div className="double-divider" style={{ borderTop: '2px solid #000', margin: '10px 0' }}></div>

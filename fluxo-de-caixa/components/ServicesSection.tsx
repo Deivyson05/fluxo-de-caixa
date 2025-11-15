@@ -9,8 +9,9 @@ import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Plus, Search, Edit, Trash2, Clock } from 'lucide-react';
+import { fetchData, setData } from '@/lib/utils';
 
-interface Service {
+export interface Service {
   id: string;
   name: string;
   description: string;
@@ -22,28 +23,11 @@ export function ServicesSection() {
   const [services, setServices] = useState<Service[]>([]);
 
   useEffect(() => {
-    async function fetchServicos() {
-      try {
-        const res = await fetch("api/servicos");
-        const data = await res.json();
-        setServices(data);
-        console.log("servicos: " + data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchServicos();
+    fetchData('servicos', setServices);
   }, []);
 
   async function atualizarServicos(novoArray: Service[]) {
-    const res = await fetch("/api/servicos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(novoArray),
-    });
-
-    const data = await res.json();
-    console.log("Resposta da API:", data);
+    setData('servicos', novoArray);
   }
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -112,7 +96,7 @@ export function ServicesSection() {
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => { setEditingService(null); setFormData({ name: '', description: '', price: '', duration: '' }); }}>
+              <Button className='cursor-pointer' onClick={() => { setEditingService(null); setFormData({ name: '', description: '', price: '', duration: '' }); }}>
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Serviço
               </Button>
