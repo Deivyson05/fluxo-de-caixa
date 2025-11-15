@@ -45,8 +45,8 @@ export function OrdersSection() {
   const [mockServices, setMockServices] = useState<OrderItem[]>([]);
 
   useEffect(() => {
-    let clients: Client[] = getData('clientes');
-    let services: Service[] = getData('servicos');
+    let clients: Client[] = getData('clientes') || [];
+    let services: Service[] = getData('servicos') || [];
 
     setMockClients(clients.map((c: Client) => c.name));
     //[{id, name, price}]
